@@ -1,0 +1,22 @@
+//Define mesh boundaries in loops
+
+border bot(t=0,10){
+  x=t;
+  y=0;
+}
+border right(t=0,10){
+  x=10;
+  y=t;
+}
+border top(t=0,10){
+  x=10-t;
+  y=10;
+}
+border left(t=0,10){
+  x=0;
+  y=10-t;
+}
+
+//Build mesh with built in mesh size
+mesh Th=buildmesh(bot(30)+right(30)+top(30)+left(30));
+plot(Th);

@@ -1,0 +1,34 @@
+mesh Th=square(30,30);
+
+fespace Xh(Th,P2);
+
+Xh phi1,v1;
+Xh phi2,v2;
+
+real x0=0.5;
+real y0=0.5;
+real fmag=0.01;
+
+func R=sqrt(((x-x0)*(x-x0)) + ((y-y0)*(y-y0)))+.00000000001;
+func Norm=1/R;
+
+func phi10=-fmag*Norm*Norm*(x0-x);
+func phi20=-fmag*Norm*Norm*(y0-y);
+
+solve Image([phi1,phi2],[v1,v2]) =
+    int2d(Th)(dx(phi1)*dx(v1)
+              + dy(phi2)*dy(v2)
+            )
+            + on(1,phi1=-phi10,phi2=-phi20);
+
+savemesh(Th,"Image_Charge.msh");
+
+plot(Th,wait=1);
+plot(phi1,wait=1);
+
+cout << phi2[].n << endl;
+
+{
+  ofstream fout("Solution.dat");
+  fout << phi1[];
+}

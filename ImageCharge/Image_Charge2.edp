@@ -1,0 +1,74 @@
+mesh Th=square(30,30);
+
+fespace Xh(Th,P2);
+
+Xh phi,v;
+
+real dt,x0,y0,fmag;
+
+{ifstream file("Image_Charge_IC.dat");
+file >> dt;
+file >> x0;
+file >> y0;
+file >> fmag;}
+
+try{
+  {ifstream file("Pos.dat");
+  real value;
+  bool endline = true;
+  while(endline){
+    real testx0;
+    file >> testx0;
+    if(testx0 == 0){
+      endline = false;
+    } else{
+      x0 = testx0;
+      file >> y0;
+    }
+  }
+  }
+  real dx0,dy0;
+  {ifstream file("newdat.dat");
+  file >> dx0;
+  file >> dy0;}
+  x0 += dx0;
+  y0 += dy0;
+  cout << "x0 y0 is " << x0 << " " << y0 << endl;
+}
+catch(...){
+  cout << "Catch Successful" << endl;
+  {ofstream file("Pos.dat");}
+}
+
+cout << x0 << ", " << y0 << endl;
+
+func R=sqrt(((x-x0)*(x-x0)) + ((y-y0)*(y-y0)))+.00000000001;
+func Norm=1/R;
+
+func phi0=-fmag*Norm;
+
+solve Image(phi,v) =
+    int2d(Th)(dx(phi)*dx(v)
+              + dy(phi)*dy(v)
+            )
+            + on(1,phi=-phi0);
+
+Xh dphix = dx(phi);
+Xh dphiy = dy(phi);
+
+Xh dxdxphi = dx(dphix);
+Xh dxdyphi = dx(dphiy);
+Xh dydxphi = dy(dphix);
+Xh dydyphi = dy(dphiy);
+
+matrix ddPhi = [[1. + (dt/2.*dxdxphi(x0,y0)),(dt/2.*dydxphi(x0,y0))],
+                [(dt/2.*dxdyphi(x0,y0)),1. + (dt/2.*dydyphi(x0,y0))]];
+
+{ofstream file("LHSOp.dat");
+file << ddPhi << endl;}
+
+{ofstream file("RHSOp.dat");
+file << dphix(x0,y0) << "," << dphiy(x0,y0) << endl;}
+
+{ofstream file("Pos.dat",append);
+file << x0 << " " << y0 << endl;}

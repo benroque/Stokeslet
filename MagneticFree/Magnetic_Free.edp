@@ -3,6 +3,7 @@
 border bot(t=0,10){
   x=t;
   y=0;
+  label='boundary';
 }
 border right(t=0,10){
   x=10;
@@ -19,4 +20,49 @@ border left(t=0,10){
 
 //Build mesh with built in mesh size
 mesh Th=buildmesh(bot(30)+right(30)+top(30)+left(30));
-plot(Th);
+
+fespace Xh(Th,P2);
+
+Xh phi1,v1;
+Xh phi2,v2;
+
+real dt,x0,y0.fx,fy;
+
+{ifstream file("Magnetic_Free_IC.dat");
+file >> dt;
+file >> x0;
+file >> y0;
+file >> fx;
+file >> fy;}
+
+try{
+  {ifstream file("Pos.dat");
+  real value;
+  bool endline = true;
+  while(endline){
+    real testx0;
+    file >> testx0;
+    if(testx0 == 0){
+      endline = false;
+    } else{
+      x0 = testx0;
+      file >> y0;
+    }
+  }
+  }
+  real dx0,dy0;
+  {ifstream file("newdat.dat");
+  file >> dx0;
+  file >> dy0;}
+  x0+= dx0;
+}
+catch(...){
+  {ofstream file("Pos.dat");}
+}
+
+func R=sqrt(((x-x0)*(x-x0)) + ((y-y0)*(y-y0))) + 0.0000000000001;
+func Norm=1/R;
+real fmag=sqrt(fx^2+fy^2);
+
+func u10=(1/(6*pi))*((((x-x0)*(x-x0)*fx) + ((x-x0)*(y-y0)*fx)) * Norm * Norm * Norm) + (fx*Norm);
+func u20=(1/(6*pi))*((((y-y0)*(x-x0)*fx) + ((y-y0)*(y-y0)*fx)) * Norm * Norm * Norm) + (fy*Norm);

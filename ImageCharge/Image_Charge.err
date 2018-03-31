@@ -1,0 +1,28 @@
+/var/spool/slurmd/job20217/slurm_script: line 9: module: command not found
+{Undefined function or variable 'updatePot'.
+} 
+{Error using importdata (line 136)
+Unable to open file.
+} 
+{Undefined function or variable 'posDat'.
+} 
+ function RHS=updatePot(dt)
+ |
+{Error: Function definitions are not permitted in this context.
+} 
+{Error using importdata (line 136)
+Unable to open file.
+} 
+{Undefined variable "rawdat" or class "rawdat.data".
+} 
+{Undefined function or variable 'dat'.
+} 
+{Undefined function or variable 'dat'.
+} 
+{Error using importdata (line 136)
+Unable to open file.
+} 
+ end
+ |
+{Error: Illegal use of reserved keyword "end".
+} 

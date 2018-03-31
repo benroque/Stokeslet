@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --job-name=simpleML
+#SBATCH --job-name=Image_Charge
 #SBATCH --output=Image_Charge.out
 #SBATCH --error=Image_Charge.err
 #SBATCH --nodes=1

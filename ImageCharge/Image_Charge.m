@@ -1,7 +1,7 @@
 clear;
 
 %Initial Conditions
-dt=0.001;
+dt=0.1;
 tFinal=10.0;
 tTot = int64(tFinal/dt);
 
@@ -29,7 +29,7 @@ for t=0:tTot
 end;
 
 %Plot final position data
-posDat = importdata("Pos.dat");
+posDat = importdata('Pos.dat');
 [status,result] = system('rm Pos.dat');
     %Windows Fix for Unix code above
     if (status == 1)
@@ -39,14 +39,14 @@ plot(posDat(:,2))
 
 %Take data from FreeFem++ and find next time step
 function RHS=updatePot(dt)
-    rawdat=importdata("LHSOp.dat");
+    rawdat=importdata('LHSOp.dat');
     dat = rawdat.data;
     dat = dat([2:end],[1:3]);
     LHSOp = zeros(2);
     for d = 1:4
         LHSOp(dat(d,1),dat(d,2))=dat(d,3);
     end
-    RHS=dt*inv(LHSOp)*importdata("RHSOp.dat").';
+    RHS=dt*inv(LHSOp)*importdata('RHSOp.dat').';
     [status,result] = system('rm LHSOp.dat && rm RHSOp.dat');
     %Windows Fix for Unix code above
     if (status == 1)

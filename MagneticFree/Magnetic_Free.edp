@@ -64,5 +64,5 @@ func R=sqrt(((x-x0)*(x-x0)) + ((y-y0)*(y-y0))) + 0.0000000000001;
 func Norm=1/R;
 real fmag=sqrt(fx^2+fy^2);
 
-func u10=(1/(6*pi))*((((x-x0)*(x-x0)*fx) + ((x-x0)*(y-y0)*fx)) * Norm * Norm * Norm) + (fx*Norm);
-func u20=(1/(6*pi))*((((y-y0)*(x-x0)*fx) + ((y-y0)*(y-y0)*fx)) * Norm * Norm * Norm) + (fy*Norm);
+func u10=(1/(6*pi))*((((x-x0)*(x-x0)*fx) + ((x-x0)*(y-y0)*fy)) * Norm * Norm * Norm) + (fx*Norm);
+func u20=(1/(6*pi))*((((y-y0)*(x-x0)*fx) + ((y-y0)*(y-y0)*fy)) * Norm * Norm * Norm) + (fy*Norm);

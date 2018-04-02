@@ -19,7 +19,6 @@ fclose(file);
 
 %Solve time step by time step
 for t=0:tTot
-    t
     [status,result]=system('FreeFem++ Image_Charge2.edp');
     newdat=updatePot(dt);
     file = fopen('newdat.dat','w');
@@ -28,11 +27,4 @@ for t=0:tTot
     fclose(file);
 end
 
-%Plot final position data
-posDat = importdata('Pos.dat');
-[status,result] = system('rm Pos.dat');
-    %Windows Fix for Unix code above
-    if (status == 1)
-        system('del Pos.dat');
-    end
-plot(posDat(:,2))
+fprintf('Job Done \n');

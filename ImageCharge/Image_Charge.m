@@ -26,7 +26,7 @@ for t=0:tTot
     fprintf(file,'%.20e \n',newdat(1));
     fprintf(file,'%.20e \n',newdat(2));
     fclose(file);
-end;
+end
 
 %Plot final position data
 posDat = importdata('Pos.dat');

@@ -1,0 +1,132 @@
+//Define mesh boundaries in loops
+
+border bot(t=0,10){
+  x=t;
+  y=0;
+}
+border right(t=0,10){
+  x=10;
+  y=t;
+}
+border top(t=0,10){
+  x=10-t;
+  y=10;
+}
+border left(t=0,10){
+  x=0;
+  y=10-t;
+}
+
+//Build mesh with built in mesh size
+mesh Th=buildmesh(bot(30)+right(30)+top(30)+left(30));
+
+fespace Xh(Th,P2);
+fespace Mh(Th,P1);
+
+real dt,x0,y0,fx,fy;
+
+{ifstream file("Magnetic_Free_IC.dat");
+file >> dt;
+file >> x0;
+file >> y0;
+file >> fx;
+file >> fy;}
+
+try{
+  {ifstream file("Pos.dat");
+  real value;
+  bool endline = true;
+  while(endline){
+    real testx0;
+    file >> testx0;
+    if(testx0 == 0){
+      endline = false;
+    } else{
+      x0 = testx0;
+      file >> y0;
+    }
+  }
+  }
+  real dx0,dy0;
+  {ifstream file("newdat.dat");
+  file >> dx0;
+  file >> dy0;
+  file >> fx;
+  file >> fy;}
+  x0 += dx0;
+  y0 += dy0;
+}
+catch(...){
+  {ofstream file("Pos.dat");}
+}
+
+func R=sqrt(((x-x0)*(x-x0)) + ((y-y0)*(y-y0))) + 0.0000000000001;
+func Norm=1/R;
+real fmag=sqrt(fx^2+fy^2);
+
+//Solving for the Background flow
+func u10=(1/(6*pi))*((((x-x0)*(x-x0)*fx) + ((x-x0)*(y-y0)*fy)) * Norm * Norm * Norm) + (fx*Norm);
+func u20=(1/(6*pi))*((((y-y0)*(x-x0)*fx) + ((y-y0)*(y-y0)*fy)) * Norm * Norm * Norm) + (fy*Norm);
+
+Xh u1,u2;
+Xh v1,v2;
+Mh p,q;
+
+real epsr = 0.00000001;
+
+solve Stokes([u1,u2,p],[v1,v2,q]) =
+    int2d(Th)( ( dx(u1)*dx(v1) + dy(u1)*dy(v1)
+            +  dx(u2)*dx(v2) + dy(u2)*dy(v2) )
+            - p*q*epsr
+            - p*dx(v1) - p*dy(v2)
+            - dx(u1)*q - dy(u2)*q
+            )
+            + on(1,2,3,4,u1=-u10,u2=-u20);
+
+//Sending data out
+{ofstream file("u.dat");
+file << u1(x0,y0) << endl;
+file << u2(x0,y0) << endl;}
+
+//Curl
+{ofstream file("curl.dat");
+file << dx(u2)(x0,y0) - dy(u1)(x0,y0) << endl;}
+
+//Solving for the Jacobian
+Xh du1dx,du1dy,du2dx,du2dy;
+Xh dv1dx,dv1dy,dv2dx,dv2dy;
+Mh dpdx,dpdy,dqdx,dqdy;
+
+func du10dx = -(1/(6*pi))*((fx*(x-x0)+(fy*(y-y0)))*((2*(x-x0)*(x-x0))-((y-y0)*(y-y0))))*Norm^5;
+func du20dx = (1/(6*pi))*((-fy*(x-x0)*(((x-x0)*(x-x0)) + (4*(y-y0)*(y-y0)))) + (fx*(y-y0)*((-2*(x-x0)*(x-x0)) + ((y-y0)*(y-y0)))))*Norm^5;
+
+solve dStokesdx([du1dx,du2dx,dpdx],[dv1dx,dv2dx,dqdx]) =
+    int2d(Th)( ( dx(du1dx)*dx(dv1dx) + dy(du1dx)*dy(dv1dx)
+            +  dx(du2dx)*dx(dv2dx) + dy(du2dx)*dy(dv2dx) )
+            - dpdx*dqdx*epsr
+            - dpdx*dx(dv1dx) - dpdx*dy(dv2dx)
+            - dx(du1dx)*dqdx - dy(du2dx)*dqdx
+            )
+            + on(1,2,3,4,du1dx=-du10dx,du2dx=-du20dx);
+
+
+func du10dy = (1/(6*pi))*((fx*(x-x0)+(fy*(y-y0)))*(((x-x0)*(x-x0))-(2*(y-y0)*(y-y0))))*Norm^5;
+func du20dy = (1/(6*pi))*((fy*(x-x0)*(((x-x0)*(x-x0)) + (-2*(y-y0)*(y-y0)))) - (fx*(y-y0)*((4*(x-x0)*(x-x0)) + ((y-y0)*(y-y0)))))*Norm^5;
+
+solve dStokesdy([du1dy,du2dy,dpdy],[dv1dy,dv2dy,dqdy]) =
+    int2d(Th)( ( dx(du1dy)*dx(dv1dy) + dy(du1dy)*dy(dv1dy)
+            +  dx(du2dy)*dx(dv2dy) + dy(du2dy)*dy(dv2dy) )
+            - dpdy*dqdy*epsr
+            - dpdy*dx(dv1dy) - dpdy*dy(dv2dy)
+            - dx(du1dy)*dqdy - dy(du2dy)*dqdy
+            )
+            + on(1,2,3,4,du1dy=-du10dy,du2dy=-du20dy);
+
+{ofstream file("Jacobian.dat");
+file << du1dx(x0,y0) << endl;
+file << du1dy(x0,y0) << endl;
+file << du2dx(x0,y0) << endl;
+file << du2dy(x0,y0) << endl;}
+
+{ofstream file("Pos.dat",append);
+file << x0 << " " << y0 << endl;}

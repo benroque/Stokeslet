@@ -1,14 +1,14 @@
 clear;
 
 %Initial Conditions
-dt=0.001;
-tFinal=10.0;
+dt=0.01;
+tFinal=100.0;
 tTot=int64(tFinal/dt);
 
 xIC=5.0;
 yIC=5.0;
 FxIC=0.0;
-FyIC=-10.0;
+FyIC=-0.1;
 fx=FxIC;
 fy=FyIC;
 

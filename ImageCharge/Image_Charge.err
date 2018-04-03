@@ -1,11 +1,1 @@
-/var/spool/slurmd/job20222/slurm_script: line 9: module: command not found
-{Undefined function or variable 'updatePot'.
-} 
- function RHS=updatePot(dt)
- |
-{Error: Function definitions are not permitted in this context.
-} 
- end
- |
-{Error: Illegal use of reserved keyword "end".
-} 
+/var/spool/slurmd/job20227/slurm_script: line 9: module: command not found

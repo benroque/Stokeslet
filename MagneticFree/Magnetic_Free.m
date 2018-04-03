@@ -2,7 +2,7 @@ clear;
 
 %Initial Conditions
 dt=0.001;
-tFinal=1.0;
+tFinal=10.0;
 tTot=int64(tFinal/dt);
 
 xIC=5.0;

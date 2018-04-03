@@ -8,7 +8,7 @@ tTot=int64(tFinal/dt);
 xIC=5.0;
 yIC=5.0;
 FxIC=0.0;
-FyIC=-1.0;
+FyIC=-10.0;
 fx=FxIC;
 fy=FyIC;
 
@@ -23,6 +23,7 @@ fclose(file);
 
 %Solve for the fluid flow
 for t=0:tTot
+    t
     [status,result]=system('FreeFem++ Magnetic_Free.edp');
     newdat=updatePot(fx,fy,dt);
     file = fopen('newdat.dat','w');
@@ -34,3 +35,7 @@ for t=0:tTot
     fx=newdat(3);
     fy=newdat(4);
 end;
+[status,result]=system('rm u.dat Jacoabian.dat curl.dat newdat.dat');
+if(status==1)
+    system('del u.dat Jacobian.dat curl.dat newdat.dat');
+end

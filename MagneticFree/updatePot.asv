@@ -1,9 +1,0 @@
-%Take data from FreeFem++ and find next time step
-function RHS=updatePot(dt);
-    urawdat=importdata('u.dat');
-    jacobrawdat=importdata('Jacobian.dat');
-    u=[urawdat[1] urawdat[2]];
-    Jacob=[jacobrawdat[1] jacobrawdat[2]; jacobrawdat[3] jacobrawdat[4]];
-    identity=[1 0; 0 1];
-    LHS=identity-
-end

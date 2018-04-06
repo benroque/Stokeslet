@@ -1,7 +1,12 @@
 %Take data from FreeFem++ and find next time step
 function newdat=updatePot(fx,fy,dt);
-    urawdat=importdata('u.dat');
-    jacobrawdat=importdata('Jacobian.dat');
+    try
+        urawdat=importdata('Data/u.dat');
+        jacobrawdat=importdata('Data/Jacobian.dat');
+    catch
+        urawdat=importdata('Data\u.dat');
+        jacobrawdat=importdata('Data\Jacobian.dat');
+    end
     jacobrawdat=transpose(jacobrawdat);
     u=transpose(urawdat);
     Jacob=[jacobrawdat(1) jacobrawdat(2); jacobrawdat(3) jacobrawdat(4)];

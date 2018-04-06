@@ -32,8 +32,11 @@ file >> y0;
 file >> fx;
 file >> fy;}
 
+string datafolder = "dt" + string(dt) + "x" + string(x0) + "y" + string(y0)
+                  + "fx" + string(fx) + "fy" + string(fy);
+
 try{
-  {ifstream file("Pos.dat");
+  {ifstream file(datafolder+"/Pos.dat");
   real value;
   bool endline = true;
   while(endline){
@@ -48,7 +51,7 @@ try{
   }
   }
   real dx0,dy0;
-  {ifstream file("newdat.dat");
+  {ifstream file("Data/newdat.dat");
   file >> dx0;
   file >> dy0;
   file >> fx;
@@ -57,7 +60,7 @@ try{
   y0 += dy0;
 }
 catch(...){
-  {ofstream file("Pos.dat");}
+  {ofstream file(datafolder+"/Pos.dat");}
 }
 
 func R=sqrt(((x-x0)*(x-x0)) + ((y-y0)*(y-y0))) + 0.0000000000001;
@@ -84,12 +87,12 @@ solve Stokes([u1,u2,p],[v1,v2,q]) =
             + on(1,2,3,4,u1=-u10,u2=-u20);
 
 //Sending data out
-{ofstream file("u.dat");
+{ofstream file("Data/u.dat");
 file << u1(x0,y0) << endl;
 file << u2(x0,y0) << endl;}
 
 //Curl
-{ofstream file("curl.dat");
+{ofstream file("Data/curl.dat");
 file << dx(u2)(x0,y0) - dy(u1)(x0,y0) << endl;}
 
 //Solving for the Jacobian
@@ -122,11 +125,11 @@ solve dStokesdy([du1dy,du2dy,dpdy],[dv1dy,dv2dy,dqdy]) =
             )
             + on(1,2,3,4,du1dy=-du10dy,du2dy=-du20dy);
 
-{ofstream file("Jacobian.dat");
+{ofstream file("Data/Jacobian.dat");
 file << du1dx(x0,y0) << endl;
 file << du1dy(x0,y0) << endl;
 file << du2dx(x0,y0) << endl;
 file << du2dy(x0,y0) << endl;}
 
-{ofstream file("Pos.dat",append);
+{ofstream file(datafolder+"/Pos.dat",append);
 file << x0 << " " << y0 << endl;}

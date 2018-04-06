@@ -1,5 +1,9 @@
 function newF = updateF(fx,fy)
-   curlrawdat=importdata('curl.dat');
+   try
+       curlrawdat=importdata('Data/curl.dat');
+   catch
+       curlrawdat=importdata('Data\curl.dat');
+   end
    fmag=sqrt(fx^2+fy^2);
    dx=fx/fmag;
    dy=fy/fmag;

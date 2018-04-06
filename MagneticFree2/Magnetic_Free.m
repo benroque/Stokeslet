@@ -7,9 +7,19 @@ ICdat=fscanf(file,'%e');
 fclose(file);
 ICdat=transpose(ICdat);
 dt=ICdat(1);
+xIC=ICdat(2);
+yIC=ICdat(3);
 fx=ICdat(4);
 fy=ICdat(5);
 tTot=int64(tFinal/dt);
+
+foldername='dt'+string(dt)+'x'+string(xIC)+'y'+string(yIC)+'fx'+string(fx)+'fy'+string(fy);
+    command = 'mkdir '+foldername;
+    command = char(command);
+    [status,result]=system(command);
+    if(status==1)
+        fprintf('Delete Data and Try again\n');
+    end
 
 %Solve for the fluid flow
 for t=0:tTot

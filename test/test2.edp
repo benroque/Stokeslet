@@ -1,0 +1,2 @@
+include "test1.edp"
+cout << "and I am from file 2" << endl;

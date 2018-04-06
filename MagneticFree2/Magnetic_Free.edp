@@ -1,25 +1,7 @@
-//Define mesh boundaries in loops
+//Define mesh
+mesh Th = readmesh("Gilga.mesh");
 
-border bot(t=0,10){
-  x=t;
-  y=0;
-}
-border right(t=0,10){
-  x=10;
-  y=t;
-}
-border top(t=0,10){
-  x=10-t;
-  y=10;
-}
-border left(t=0,10){
-  x=0;
-  y=10-t;
-}
-
-//Build mesh with built in mesh size
-mesh Th=buildmesh(bot(30)+right(30)+top(30)+left(30));
-
+// Solvers
 fespace Xh(Th,P2);
 fespace Mh(Th,P1);
 
@@ -84,7 +66,7 @@ solve Stokes([u1,u2,p],[v1,v2,q]) =
             - p*dx(v1) - p*dy(v2)
             - dx(u1)*q - dy(u2)*q
             )
-            + on(1,2,3,4,u1=-u10,u2=-u20);
+            + on(1,u1=-u10,u2=-u20);
 
 //Sending data out
 {ofstream file("Data/u.dat");
@@ -110,7 +92,7 @@ solve dStokesdx([du1dx,du2dx,dpdx],[dv1dx,dv2dx,dqdx]) =
             - dpdx*dx(dv1dx) - dpdx*dy(dv2dx)
             - dx(du1dx)*dqdx - dy(du2dx)*dqdx
             )
-            + on(1,2,3,4,du1dx=-du10dx,du2dx=-du20dx);
+            + on(1,du1dx=-du10dx,du2dx=-du20dx);
 
 
 func du10dy = (1/(6*pi))*((fx*(x-x0)+(fy*(y-y0)))*(((x-x0)*(x-x0))-(2*(y-y0)*(y-y0))))*Norm^5;
@@ -123,7 +105,7 @@ solve dStokesdy([du1dy,du2dy,dpdy],[dv1dy,dv2dy,dqdy]) =
             - dpdy*dx(dv1dy) - dpdy*dy(dv2dy)
             - dx(du1dy)*dqdy - dy(du2dy)*dqdy
             )
-            + on(1,2,3,4,du1dy=-du10dy,du2dy=-du20dy);
+            + on(1,du1dy=-du10dy,du2dy=-du20dy);
 
 {ofstream file("Data/Jacobian.dat");
 file << du1dx(x0,y0) << endl;

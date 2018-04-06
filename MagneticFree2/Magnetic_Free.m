@@ -13,7 +13,6 @@ tTot=int64(tFinal/dt);
 
 %Solve for the fluid flow
 for t=0:tTot
-    t
     [status,result]=system('FreeFem++ Magnetic_Free.edp');
     newdat=updatePot(fx,fy,dt);
     try
@@ -29,7 +28,7 @@ for t=0:tTot
     fx=newdat(3);
     fy=newdat(4);
 end;
-[status,result]=system('rm Data/u.dat Data/Jacoabian.dat Data/curl.dat Data/newdat.dat');
+[status,result]=system('rm Data/u.dat Data/Jacobian.dat Data/curl.dat Data/newdat.dat');
 if(status==1)
     system('del Data\u.dat Data\Jacobian.dat Data\curl.dat Data\newdat.dat');
 end

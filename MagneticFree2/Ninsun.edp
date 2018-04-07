@@ -1,4 +1,11 @@
+IFMACRO(DIR)
+// macro DIR exist
+include Stringification(DIR)
+ENDIFMACRO
+
+IFMACRO(!DIR)
 include "Lugulbanda.edp";
+ENDIFMACRO
 
 //Build mesh with built in mesh size
 mesh Th=buildmesh(bot(30)+right(30)+top(30)+left(30));

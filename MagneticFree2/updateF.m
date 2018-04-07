@@ -9,5 +9,5 @@ function newF = updateF(fx,fy)
    dy=fy/fmag;
    dfx=-curlrawdat*dy;
    dfy=curlrawdat*dx;
-   newF=[fx+dfx fy+dfy];
+   newF=[(fx+dfx)*fmag (fy+dfy)*fmag];
 end

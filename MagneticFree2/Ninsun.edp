@@ -7,9 +7,6 @@ IFMACRO(!DIR)
 include "Lugulbanda.edp";
 ENDIFMACRO
 
-//Build mesh with built in mesh size
-mesh Th=buildmesh(bot(30)+right(30)+top(30)+left(30));
-
 //saving the mesh
 savemesh(Th, "Gilga.mesh");
 

@@ -1,0 +1,49 @@
+// Boundaries
+border a(t=1,0){
+  x=0;
+  y=(2*t)+4;
+  label=1;
+}
+
+border b(t=1,0){
+  x=2*t;
+  y=6;
+  label=1;
+}
+
+border c(t=1,0){
+  x=2;
+  y=(4*t)+6;
+}
+
+border d(t=1,0){
+  x=(98*t)+2;
+  y=10;
+  label=1;
+}
+
+border e(t=1,0){
+  x=100;
+  y=10-(10*t);
+  label=1;
+}
+
+border f(t=1,0){
+  x=100-(98*t);
+  y=0;
+  label=1;
+}
+
+border g(t=1,0){
+  x=2;
+  y=(4*t);
+  label=1;
+}
+
+border h(t=1,0){
+  x=2-(2*t);
+  y=4;
+  label=1;
+}
+
+mesh Th = buildmesh(a(30)+b(30)+c(30)+d(300)+e(30)+f(300)+g(30)+h(30));

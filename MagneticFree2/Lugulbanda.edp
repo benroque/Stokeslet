@@ -19,3 +19,6 @@ border left(t=0,10){
   y=10-t;
   label=1;
 }
+
+//Build mesh with built in mesh size
+mesh Th=buildmesh(bot(30)+right(30)+top(30)+left(30));

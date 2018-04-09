@@ -1,4 +1,4 @@
-function newF = updateF(fx,fy)c
+function newF = updateF(fx,fy)
    try
        curlrawdat=importdata('Data/curl.dat');
    catch
@@ -11,6 +11,6 @@ function newF = updateF(fx,fy)c
    dfy=curlrawdat*dx;
    dfmag=sqrt(dfx^2+dfy^2);
    dfx=dfx/dfmag;
-   dy=dfy/dfmag;
+   dfy=dfy/dfmag;
    newF=[(dx+dfx)*fmag (dy+dfy)*fmag];
 end

@@ -1,7 +1,7 @@
 clear;
 
 %Initial Conditions
-tFinal=1.0;
+tFinal=10.0;
 file=fopen('Magnetic_Free_IC.dat','r');
 ICdat=fscanf(file,'%e');
 fclose(file);
@@ -23,7 +23,6 @@ foldername='dt'+string(dt)+'x'+string(xIC)+'y'+string(yIC)+'fx'+string(fx)+'fy'+
 
 %Solve for the fluid flow
 for t=0:tTot
-    t
     [status,result]=system('FreeFem++ Magnetic_Free.edp');
     newdat=updatePot(fx,fy,dt);
     try

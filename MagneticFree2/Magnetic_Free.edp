@@ -47,7 +47,6 @@ catch(...){
 
 func R=sqrt(((x-x0)*(x-x0)) + ((y-y0)*(y-y0))) + 0.0000000000001;
 func Norm=1/R;
-real fmag=sqrt(fx^2+fy^2);
 
 //Solving for the Background flow
 func u10=(1/(6*pi))*((((x-x0)*(x-x0)*fx) + ((x-x0)*(y-y0)*fy)) * Norm * Norm * Norm) + (fx*Norm);
@@ -95,8 +94,8 @@ solve dStokesdx([du1dx,du2dx,dpdx],[dv1dx,dv2dx,dqdx]) =
             + on(1,du1dx=-du10dx,du2dx=-du20dx);
 
 
-func du10dy = (1/(6*pi))*((fx*(x-x0)+(fy*(y-y0)))*(((x-x0)*(x-x0))-(2*(y-y0)*(y-y0))))*Norm^5;
-func du20dy = (1/(6*pi))*((fy*(x-x0)*(((x-x0)*(x-x0)) + (-2*(y-y0)*(y-y0)))) - (fx*(y-y0)*((4*(x-x0)*(x-x0)) + ((y-y0)*(y-y0)))))*Norm^5;
+func du20dy = (1/(6*pi))*(((fx*(x-x0))+(fy*(y-y0)))*(((x-x0)*(x-x0))-(2*(y-y0)*(y-y0))))*Norm^5;
+func du10dy = (1/(6*pi))*((fy*(x-x0)*(((x-x0)*(x-x0)) + (-2*(y-y0)*(y-y0)))) - (fx*(y-y0)*((4*(x-x0)*(x-x0)) + ((y-y0)*(y-y0)))))*Norm^5;
 
 solve dStokesdy([du1dy,du2dy,dpdy],[dv1dy,dv2dy,dqdy]) =
     int2d(Th)( ( dx(du1dy)*dx(dv1dy) + dy(du1dy)*dy(dv1dy)

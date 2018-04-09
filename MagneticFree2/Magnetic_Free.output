@@ -1,4 +1,4 @@
-/var/spool/slurmd/job20852/slurm_script: line 24: module: command not found
+/var/spool/slurmd/job20857/slurm_script: line 24: module: command not found
 
                             < M A T L A B (R) >
                   Copyright 1984-2016 The MathWorks, Inc.
@@ -9,4 +9,12 @@
 To get started, type one of these: helpwin, helpdesk, or demo.
 For product information, visit www.mathworks.com.
  
->> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> slurmstepd: error: *** JOB 20852 ON node13 CANCELLED AT 2018-04-09T11:05:26 DUE TO TIME LIMIT ***
+>> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> >> {Error: File: /home/broque/Research/Stokeslet/MagneticFree2/updateF.m Line: 1
+Column: 31
+Unexpected MATLAB expression.
+
+Error in updatePot (line 15)
+    newF=updateF(fx,fy);
+} 
+>> >> /bin/bash: del: command not found
+>> 

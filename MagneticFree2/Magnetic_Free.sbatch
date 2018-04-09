@@ -4,7 +4,7 @@
 #SBATCH --nodes=1
 
 #  set max wall-clock time (D-HH:MM:SS)
-#SBATCH --time=0-12:00:00
+#SBATCH --time=0-24:00:00
 
 #  set partition/queue to use
 #SBATCH --partition=day-long-cpu

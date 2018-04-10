@@ -40,5 +40,5 @@ for t=0:tTot
 end;
 [status,result]=system('rm Data/u.dat Data/Jacobian.dat Data/curl.dat Data/newdat.dat');
 if(status==1)
-    system('del Data\u.dat Data\Jacobian.dat Data\curl.dat Data\newdat.dat');
+    %system('del Data\u.dat Data\Jacobian.dat Data\curl.dat Data\newdat.dat');
 end

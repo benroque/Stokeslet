@@ -1,0 +1,24 @@
+// Borders that define our mesh
+border bot(t=0,10){
+  x=t;
+  y=0;
+  label=1;
+}
+border right(t=0,10){
+  x=10;
+  y=t;
+  label=1;
+}
+border top(t=0,10){
+  x=10-t;
+  y=10;
+  label=1;
+}
+border left(t=0,10){
+  x=0;
+  y=10-t;
+  label=1;
+}
+
+//Build mesh with built in mesh size
+mesh Th=buildmesh(bot(30)+right(30)+top(30)+left(30));

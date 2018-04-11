@@ -1,0 +1,200 @@
+//Define mesh
+mesh Th = readmesh("Gilga.mesh");
+
+// Solvers
+fespace Xh(Th,P2);
+fespace Mh(Th,P1);
+
+real dt,numpts;
+
+{ifstream file("Magnetic_Free_IC.dat");
+file >> dt;
+file >> numpts;
+real[int] x0(numpts) y0(numpts) fx(numpts) fy(numpts);
+for(int i=0; i<numpts; i++){
+  file >> x0(i);
+  file >> y0(i);
+  file >> fx(i);
+  file >> fy(i);
+}
+}
+
+string datafolder = "dt" + string(dt) + "x"
+for(int i=0; i<numpts; i++){
+  datafolder += string(x0(i)) + "-";
+}
+
+datafolder+= "y"
+for(int i=0; i<numpts; i++){
+  datafolder += string(y0(i)) + "-";
+  }
+
+datafolder += "fx"
+for(int i=0; i<numpts; i++){
+  datafolder += string(fx(i)) + "-";
+}
+
+datafolder += "fy"
+for(int i=0; i<numpts; i++){
+  datafolder += string(fy(i)) + "-";
+}
+
+try{
+  {ifstream file(datafolder+"/Pos.dat");
+  real value;
+  bool endline = true;
+  while(endline){
+    real testx0;
+    file >> testx0;
+    if(testx0 == 0){
+      endline = false;
+    } else{
+      x0(0) = testx0;
+      file >> y0(i);
+      for(int i=1; i<numpts; i++){
+        file >> x0(i)
+        file >> y0(i);
+      }
+    }
+  }
+  }
+  real dx0,dy0;
+  {ifstream file("Data/newdat.dat");
+  for(int i=0; i<numpts; i++){
+    file >> dx0;
+    file >> dy0;
+    file >> fx(i);
+    file >> fy(i);
+    x0(i) += dx0;
+    y0(i) += dy0;
+  }
+  }
+}
+catch(...){
+  {ofstream file(datafolder+"/Pos.dat");}
+}
+
+macro R(i) (sqrt(((x-x0(i))*(x-x0(i))) + ((y-y0(i))*(y-y0(i)))) + 0.0000000000001) // R
+
+macro Norm(i) (1/R(i)) // Norm
+
+//Solving for the Background flow
+func real u10(real x,real y)
+{
+  real soln=0;
+  for(int i=0; i<numpts; i++){
+    soln += ((((x-x0(i))*(x-x0(i))*fx(i)) + ((x-x0(i))*(y-y0(i))*fy(i))) * Norm(i) * Norm(i) * Norm(i)) + (fx(i)*Norm(i));
+  }
+  return soln;
+}
+
+func real u20(real x, real y)
+{
+  real soln=0;
+  for(int i=0;i<numpts; i++){
+    soln += ((((y-y0)*(x-x0)*fx) + ((y-y0)*(y-y0)*fy)) * Norm * Norm * Norm) + (fy*Norm);
+  }
+  return soln;
+}
+
+Xh u1,u2;
+Xh v1,v2;
+Mh p,q;
+
+real epsr = 0.00000001;
+
+solve Stokes([u1,u2,p],[v1,v2,q]) =
+    int2d(Th)( ( dx(u1)*dx(v1) + dy(u1)*dy(v1)
+            +  dx(u2)*dx(v2) + dy(u2)*dy(v2) )
+            - p*q*epsr
+            - p*dx(v1) - p*dy(v2)
+            - dx(u1)*q - dy(u2)*q
+            )
+            + on(1,u1=-u10(x,y),u2=-u20(x,y));
+
+//Sending data out
+{ofstream file("Data/u.dat");
+for(int j=0; j<numpts; j++){
+  file << u1(x0(j),y0(j)) << endl;
+  file << u2(x0(j),y0(j)) << endl;
+}
+}
+
+//Curl
+{ofstream file("Data/curl.dat");
+for(int j=0; j<numpts; j++){
+  file << dx(u2)(x0(j),y0(j)) - dy(u1)(x0(j),y0(j)) << endl;}
+}
+
+//Solving for the Jacobian
+Xh du1dx,du1dy,du2dx,du2dy;
+Xh dv1dx,dv1dy,dv2dx,dv2dy;
+Mh dpdx,dpdy,dqdx,dqdy;
+
+func real du10dx(real x, real y)
+{
+  real soln = 0;
+  for(int j=0; j<numpts; j++){
+    soln += -((fx(j)*(x-x0(j))+(fy(j)*(y-y0(j))))*((2*(x-x0(j))*(x-x0(j)))-((y-y0(j))*(y-y0(j)))))*Norm(j)^5;
+  }
+  return soln;
+}
+
+func real du20dx(real x, real y)
+{
+  real soln = 0;
+  for(int j=0: j<numpts; j++){
+    soln += ((-fy(j)*(x-x0(j))*(((x-x0(j))*(x-x0(j))) + (4*(y-y0(j))*(y-y0(j))))) + (fx(j)*(y-y0(j))*((-2*(x-x0(j))*(x-x0(j))) + ((y-y0(j))*(y-y0(j))))))*Norm(j)^5;
+  }
+  return soln;
+}
+
+solve dStokesdx([du1dx,du2dx,dpdx],[dv1dx,dv2dx,dqdx]) =
+    int2d(Th)( ( dx(du1dx)*dx(dv1dx) + dy(du1dx)*dy(dv1dx)
+            +  dx(du2dx)*dx(dv2dx) + dy(du2dx)*dy(dv2dx) )
+            - dpdx*dqdx*epsr
+            - dpdx*dx(dv1dx) - dpdx*dy(dv2dx)
+            - dx(du1dx)*dqdx - dy(du2dx)*dqdx
+            )
+            + on(1,du1dx=-du10dx(x,y),du2dx=-du20dx(x,y));
+
+func real du20dy(real x, real y)
+{
+  real soln = 0;
+  for(int j=0; j<numpts; j++){
+    soln += (((fx(j)*(x-x0(j)))+(fy(j)*(y-y0(j))))*(((x-x0(j))*(x-x0(j)))-(2*(y-y0(j))*(y-y0(j)))))*Norm(j)^5;
+  }
+  return soln;
+}
+
+func real du10dy(real x, real y)
+{
+  real soln = 0;
+  for(int j=0; j<numpts; j++){
+    soln += ((fy(j)*(x-x0(j))*(((x-x0(j))*(x-x0(j))) + (-2*(y-y0(j))*(y-y0(j))))) - (fx(j)*(y-y0(j))*((4*(x-x0(j))*(x-x0(j))) + ((y-y0(j))*(y-y0(j))))))*Norm(j)^5;
+  }
+  return soln;
+}
+
+solve dStokesdy([du1dy,du2dy,dpdy],[dv1dy,dv2dy,dqdy]) =
+    int2d(Th)( ( dx(du1dy)*dx(dv1dy) + dy(du1dy)*dy(dv1dy)
+            +  dx(du2dy)*dx(dv2dy) + dy(du2dy)*dy(dv2dy) )
+            - dpdy*dqdy*epsr
+            - dpdy*dx(dv1dy) - dpdy*dy(dv2dy)
+            - dx(du1dy)*dqdy - dy(du2dy)*dqdy
+            )
+            + on(1,du1dy=-du10dy(x,y),du2dy=-du20dy(x,y));
+
+{ofstream file("Data/Jacobian.dat");
+for(int j=0; j<numpts; j++){
+  file << du1dx(x0(j),y0(j)) << endl;
+  file << du1dy(x0(j),y0(j)) << endl;
+  file << du2dx(x0(j),y0(j)) << endl;
+  file << du2dy(x0(j),y0(j)) << endl;
+}
+}
+
+{ofstream file(datafolder+"/Pos.dat",append);
+for(int j=0; j<numpts; j++){
+  file << x0(j) << " " << y0(j) << endl;}
+}

@@ -1,0 +1,13 @@
+IFMACRO(DIR)
+// macro DIR exist
+include Stringification(DIR)
+ENDIFMACRO
+
+IFMACRO(!DIR)
+include "Lugulbanda.edp";
+ENDIFMACRO
+
+//saving the mesh
+savemesh(Th, "Gilga.mesh");
+
+plot(Th,wait=1);

@@ -1,2 +1,27 @@
-include "test1.edp"
-cout << "and I am from file 2" << endl;
+mesh Th=square(20,20,[-pi+2*pi*x,-pi+2*pi*y]); //
+fespace Vh(Th,P2);
+macro z() (x+y*1i) // z = x + iy
+func f=imag(sqrt(z)); //
+func g=abs( sin(z/10)*exp(z*z/10) ); // g = |sin z/10 exp z
+Vh fh = f; plot(fh); // Fig. 4.1 isovalue of f
+Vh gh = g; plot(gh); // Fig. 4.2 isovalue of g
+
+func real u20(real x,real y){
+  real soln = 0;
+  for(int j=0; j<10; j++){
+    soln += x+y;
+  }
+  return soln;
+}
+
+Vh testh = u20(x,y); plot(testh,wait=1);
+
+int n=3;
+fespace Uh(Th,P1b); Uh u,v,uu,vv;
+fespace Ph(Th,P1); Ph p,pp;
+solve stokes([u,v,p],[uu,vv,pp]) =
+int2d(Th)(dx(u)*dx(uu)+dy(u)*dy(uu) + dx(v)*dx(vv)+ dy(v)*dy(vv)
++ dx(p)*uu + dy(p)*vv + pp*(dx(u)+dy(v))
+- 1e-10*p*pp)
++ on(1,2,4,u=0,v=0) + on(3,u=u20(x,y),v=0);
+plot([u,v],p,wait=1);

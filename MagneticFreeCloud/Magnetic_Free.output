@@ -1,4 +1,4 @@
-/var/spool/slurmd/job20869/slurm_script: line 24: module: command not found
+/var/spool/slurmd/job20870/slurm_script: line 24: module: command not found
 
                             < M A T L A B (R) >
                   Copyright 1984-2016 The MathWorks, Inc.
@@ -86,4 +86,4 @@ t =
 
    10
 
->> >> >> slurmstepd: error: *** JOB 20869 ON node13 CANCELLED AT 2018-04-12T17:46:00 ***
+>> >> >> 

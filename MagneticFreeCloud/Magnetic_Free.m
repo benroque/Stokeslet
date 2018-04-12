@@ -1,7 +1,7 @@
 clear;
 
 %Initial Conditions
-tFinal=0.1;
+tFinal=10.0;
 file=fopen('Magnetic_Free_IC.dat','r');
 ICdat=fscanf(file,'%e');
 fclose(file);

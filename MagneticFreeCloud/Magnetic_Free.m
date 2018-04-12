@@ -13,10 +13,10 @@ yIC=zeros(numpts);
 fx=zeros(numpts);
 fy=zeros(numpts);
 for i=1:numpts
-    xIC(i)=ICdat(2+(4*(i-1)));
-    yIC(i)=ICdat(3+(4*(i-1)));
-    fx(i)=ICdat(4+(4*(i-1)));
-    fy(i)=ICdat(5+(4*(i-1)));
+    xIC(i)=ICdat(3+(4*(i-1)));
+    yIC(i)=ICdat(4+(4*(i-1)));
+    fx(i)=ICdat(5+(4*(i-1)));
+    fy(i)=ICdat(6+(4*(i-1)));
 end
 tTot=int64(tFinal/dt);
 
@@ -49,22 +49,23 @@ end
 
 %Solve for the fluid flow
 for t=0:tTot
+    t
     [status,result]=system('FreeFem++ Magnetic_Free.edp');
-    newdat=updatePot(fx,fy,dt);
+    newdat=updatePot(numpts,fx,fy,dt);
     try
         file = fopen('Data/newdat.dat','w');
     catch
         file = fopen('Data\newdat.dat','w');
     end
     for i=1:numpts
-        fprintf(file,'%.20e \n',newdat(1,i));
-        fprintf(file,'%.20e \n',newdat(2,i));
-        fprintf(file,'%.20e \n',newdat(3,i));
-        fprintf(file,'%.20e \n',newdat(4,i));
-        fclose(file);
-        fx(i)=newdat(3,i);
-        fy(i)=newdat(4,i);
+        fprintf(file,'%.20e \n',newdat(i,1));
+        fprintf(file,'%.20e \n',newdat(i,2));
+        fprintf(file,'%.20e \n',newdat(i,3));
+        fprintf(file,'%.20e \n',newdat(i,4));
+        fx(i)=newdat(i,3);
+        fy(i)=newdat(i,4);
     end
+    fclose(file);
 end;
 [status,result]=system('rm Data/u.dat Data/Jacobian.dat Data/curl.dat Data/newdat.dat');
 if(status==1)

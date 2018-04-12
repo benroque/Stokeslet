@@ -7,13 +7,17 @@ function newdat=updatePot(numpts,fx,fy,dt);
         urawdat=importdata('Data\u.dat');
         jacobrawdat=importdata('Data\Jacobian.dat');
     end
-    jacobrawdat=transpose(jacobrawdat);
-    u=transpose(urawdat);
-    Jacob=[jacobrawdat(1) jacobrawdat(2); jacobrawdat(3) jacobrawdat(4)];
-    identity=[1 0; 0 1];
-    LHSOp=identity-(Jacob*dt/2);
-    newF=updateF(fx,fy);
-    RHSOp=(-newF/(6*pi)+u);
-    RHS=dt*(RHSOp)*inv(LHSOp);
+    uraw=transpose(urawdat);
+    RHS=zeros(numpts,2);
+    newF=zeros(numpts,2);
+    for i=1:numpts
+        Jacob=[jacobrawdat(4*(i-1)+1) jacobrawdat(4*(i-1)+2); jacobrawdat(4*(i-1)+3) jacobrawdat(4*(i-1)+4)];
+        u=[uraw(2*(i-1)+1) uraw(2*(i-1)+2)];
+        identity=[1 0; 0 1];
+        LHSOp=identity-(Jacob*dt/2);
+        newF(i,:)=updateF(i,fx(i),fy(i));
+        RHSOp=(-newF/(6*pi)+u);
+        RHS(i,:)=dt*(RHSOp)*inv(LHSOp);
+    end
     newdat=[RHS(1) RHS(2) newF(1) newF(2)];
 end

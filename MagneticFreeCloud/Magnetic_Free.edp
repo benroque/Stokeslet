@@ -5,38 +5,43 @@ mesh Th = readmesh("Gilga.mesh");
 fespace Xh(Th,P2);
 fespace Mh(Th,P1);
 
-real dt,numpts;
+real dt;
+int numpts;
 
 {ifstream file("Magnetic_Free_IC.dat");
 file >> dt;
-file >> numpts;
-real[int] x0(numpts) y0(numpts) fx(numpts) fy(numpts);
-for(int i=0; i<numpts; i++){
-  file >> x0(i);
-  file >> y0(i);
-  file >> fx(i);
-  file >> fy(i);
+file >> numpts;}
+real[int] x0(numpts), y0(numpts), fx(numpts), fy(numpts);
+{ifstream file("Magnetic_Free_IC.dat");
+real dummydt, dummynumpts;
+file >> dummydt;
+file >> dummynumpts;
+for(int j=0; j<numpts; j++){
+  file >> x0(j);
+  file >> y0(j);
+  file >> fx(j);
+  file >> fy(j);
 }
 }
 
-string datafolder = "dt" + string(dt) + "x"
-for(int i=0; i<numpts; i++){
-  datafolder += string(x0(i)) + "-";
+string datafolder = "dt" + string(dt) + "x";
+for(int j=0; j<numpts; j++){
+  datafolder = datafolder + string(x0(j)) + "-";
 }
 
-datafolder+= "y"
-for(int i=0; i<numpts; i++){
-  datafolder += string(y0(i)) + "-";
+datafolder = datafolder + "y";
+for(int j=0; j<numpts; j++){
+  datafolder = datafolder + string(y0(j)) + "-";
   }
 
-datafolder += "fx"
-for(int i=0; i<numpts; i++){
-  datafolder += string(fx(i)) + "-";
+datafolder = datafolder + "fx";
+for(int j=0; j<numpts; j++){
+  datafolder = datafolder + string(fx(j)) + "-";
 }
 
-datafolder += "fy"
-for(int i=0; i<numpts; i++){
-  datafolder += string(fy(i)) + "-";
+datafolder = datafolder + "fy";
+for(int j=0; j<numpts; j++){
+  datafolder = datafolder + string(fy(j)) + "-";
 }
 
 try{
@@ -50,9 +55,9 @@ try{
       endline = false;
     } else{
       x0(0) = testx0;
-      file >> y0(i);
+      file >> y0(0);
       for(int i=1; i<numpts; i++){
-        file >> x0(i)
+        file >> x0(i);
         file >> y0(i);
       }
     }
@@ -82,8 +87,8 @@ macro Norm(i) (1/R(i)) // Norm
 func real u10(real x,real y)
 {
   real soln=0;
-  for(int i=0; i<numpts; i++){
-    soln += ((((x-x0(i))*(x-x0(i))*fx(i)) + ((x-x0(i))*(y-y0(i))*fy(i))) * Norm(i) * Norm(i) * Norm(i)) + (fx(i)*Norm(i));
+  for(int j=0; j<numpts; j++){
+    soln += ((((x-x0(j))*(x-x0(j))*fx(j)) + ((x-x0(j))*(y-y0(j))*fy(j))) * Norm(j) * Norm(j) * Norm(j)) + (fx(j)*Norm(j));
   }
   return soln;
 }
@@ -91,8 +96,8 @@ func real u10(real x,real y)
 func real u20(real x, real y)
 {
   real soln=0;
-  for(int i=0;i<numpts; i++){
-    soln += ((((y-y0)*(x-x0)*fx) + ((y-y0)*(y-y0)*fy)) * Norm * Norm * Norm) + (fy*Norm);
+  for(int j=0; j<numpts; j++){
+    soln += ((((y-y0(j))*(x-x0(j))*fx(j)) + ((y-y0(j))*(y-y0(j))*fy(j))) * Norm(j) * Norm(j) * Norm(j)) + (fy(j)*Norm(j));
   }
   return soln;
 }
@@ -143,7 +148,7 @@ func real du10dx(real x, real y)
 func real du20dx(real x, real y)
 {
   real soln = 0;
-  for(int j=0: j<numpts; j++){
+  for(int j=0; j<numpts; j++){
     soln += ((-fy(j)*(x-x0(j))*(((x-x0(j))*(x-x0(j))) + (4*(y-y0(j))*(y-y0(j))))) + (fx(j)*(y-y0(j))*((-2*(x-x0(j))*(x-x0(j))) + ((y-y0(j))*(y-y0(j))))))*Norm(j)^5;
   }
   return soln;
@@ -194,7 +199,7 @@ for(int j=0; j<numpts; j++){
 }
 }
 
-{ofstream file(datafolder+"/Pos.dat",append);
+{ofstream file(datafolder + "/Pos.dat",append);
 for(int j=0; j<numpts; j++){
   file << x0(j) << " " << y0(j) << endl;}
 }

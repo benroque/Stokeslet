@@ -21,4 +21,4 @@ border left(t=0,10){
 }
 
 //Build mesh with built in mesh size
-mesh Th=buildmesh(bot(30)+right(30)+top(30)+left(30));
+mesh Th=buildmesh(bot(100)+right(100)+top(100)+left(100));

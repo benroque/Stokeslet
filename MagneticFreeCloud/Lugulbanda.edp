@@ -1,22 +1,22 @@
 // Borders that define our mesh
-border bot(t=0,10){
+border bot(t=0,100){
   x=t;
   y=0;
   label=1;
 }
-border right(t=0,10){
-  x=10;
+border right(t=0,100){
+  x=100;
   y=t;
   label=1;
 }
-border top(t=0,10){
-  x=10-t;
-  y=10;
+border top(t=0,100){
+  x=100-t;
+  y=100;
   label=1;
 }
-border left(t=0,10){
+border left(t=0,100){
   x=0;
-  y=10-t;
+  y=100-t;
   label=1;
 }
 
